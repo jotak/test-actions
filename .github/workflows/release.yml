@@ -1,0 +1,24 @@
+name: release to quay.io
+on:
+  push:
+    tags: [v*]
+
+jobs:
+  push-image:
+    name: push image
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        go: ['1.17']
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: validate tag
+        run: |
+          tag=`git describe --exact-match --tags 2> /dev/null`
+          if [[ $tag =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$ ]]; then
+              echo "$tag is a valid release tag"
+          else
+              echo "$tag is NOT a valid release tag"
+              exit 1
+          fi
