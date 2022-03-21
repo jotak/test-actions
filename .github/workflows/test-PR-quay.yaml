@@ -22,8 +22,8 @@ jobs:
       - name: validate user
         id: validate_user
         run: |
-          for user in ${{ env.ALLOWED_USERS}}; do
-            if [[ ${{ github.event.pull_request_target.user.login }} == $user ]]; then
+          for user in "${{ env.ALLOWED_USERS}}"; do
+            if [[ "${{ github.event.pull_request_target.user.login }}" == "$user" ]]; then
                 echo "$user is a known user, proceeding to build."
                 exit 0
             fi
