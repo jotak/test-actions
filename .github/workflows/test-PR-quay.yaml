@@ -3,7 +3,7 @@ on:
   pull_request_target
 
 env:
-  ALLOWED_USERS: foo bar baz
+  ALLOWED_USERS: foo bar jotak baz
 
 jobs:
   push-pr-image:
