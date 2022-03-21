@@ -3,7 +3,7 @@ on:
   pull_request_target
 
 env:
-  ALLOWED_USERS: foo bar jotak baz
+  ALLOWED_USERS: (foo bar baz)
 
 jobs:
   push-pr-image:
@@ -22,10 +22,8 @@ jobs:
       - name: validate user
         id: validate_user
         run: |
-          echo "${{ github.event.pull_request }}"
-          echo "${{ github.event.pull_request.user }}"
           echo "${{ github.event.pull_request.user.login }}"
-          for user in "${{ env.ALLOWED_USERS}}"; do
+          for user in ${{ env.ALLOWED_USERS }}; do
             if [[ "${{ github.event.pull_request.user.login }}" == "$user" ]]; then
                 echo "$user is a known user, proceeding to build."
                 exit 0
