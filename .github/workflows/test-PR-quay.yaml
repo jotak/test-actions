@@ -6,8 +6,8 @@ env:
   ALLOWED_USERS: foo bar baz
 
 jobs:
-  push-image:
-    name: push image
+  push-pr-image:
+    name: push PR image
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -22,16 +22,16 @@ jobs:
       - name: validate user
         id: validate_user
         run: |
-          echo "${{ github.event.pull_request_target }}"
-          echo "${{ github.event.pull_request_target.user }}"
-          echo "${{ github.event.pull_request_target.user.login }}"
+          echo "${{ github.event.pull_request }}"
+          echo "${{ github.event.pull_request.user }}"
+          echo "${{ github.event.pull_request.user.login }}"
           for user in "${{ env.ALLOWED_USERS}}"; do
-            if [[ "${{ github.event.pull_request_target.user.login }}" == "$user" ]]; then
+            if [[ "${{ github.event.pull_request.user.login }}" == "$user" ]]; then
                 echo "$user is a known user, proceeding to build."
                 exit 0
             fi
           done
-          echo "User ${{ github.event.pull_request_target.user.login }} is unknown, PR image build canceled."
+          echo "User ${{ github.event.pull_request.user.login }} is unknown, PR image build canceled."
           exit 1
       - name: checkout
         uses: actions/checkout@v2
