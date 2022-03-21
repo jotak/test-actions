@@ -3,27 +3,19 @@ on:
   pull_request_target
 
 env:
-  ALLOWED_USERS: (foo bar baz)
+  ALLOWED_USERS: foo bar baz
 
 jobs:
   push-pr-image:
     name: push PR image
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        go: ['1.17']
     steps:
-      - name: install make
-        run: sudo apt-get install make
-      - name: set up go 1.x
-        uses: actions/setup-go@v2
-        with:
-          go-version: ${{ matrix.go }}
       - name: validate user
         id: validate_user
         run: |
           echo "${{ github.event.pull_request.user.login }}"
-          for user in ${{ env.ALLOWED_USERS }}; do
+          allowed=(${{ env.ALLOWED_USERS }})
+          for user in ${allowed[@]}; do
             if [[ "${{ github.event.pull_request.user.login }}" == "$user" ]]; then
                 echo "$user is a known user, proceeding to build."
                 exit 0
