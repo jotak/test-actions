@@ -32,3 +32,7 @@ jobs:
         run: echo "::set-output name=short_sha::$(git rev-parse --short HEAD)"
       - name: outcome
         run: echo "Building with SHA ${{ steps.shortsha.outputs.short_sha }}"
+      - name: log-1
+        run: git log -1
+      - name: cat dummy
+        run: cat dummy
