@@ -32,7 +32,13 @@ jobs:
         run: echo "::set-output name=short_sha::$(git rev-parse --short HEAD)"
       - name: outcome
         run: echo "Building with SHA ${{ steps.shortsha.outputs.short_sha }}"
-      - name: log-1
-        run: git log -1
-      - name: cat dummy
-        run: cat dummy
+      - uses: actions/github-script@v5
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Build artifact: foo-bar-baz:${{ steps.shortsha.outputs.short_sha }}'
+            })
