@@ -1,28 +1,14 @@
 name: push PR image to quay.io
 on:
-  pull_request_target
-
-env:
-  ALLOWED_USERS: foo bar jotak baz
+  pull_request_target:
+    types: [labeled]
 
 jobs:
   push-pr-image:
+    if: ${{ github.event.label.name == 'ok-to-test' }}
     name: push PR image
     runs-on: ubuntu-20.04
     steps:
-      - name: validate user
-        id: validate_user
-        run: |
-          echo "${{ github.event.pull_request.user.login }}"
-          allowed=(${{ env.ALLOWED_USERS }})
-          for user in ${allowed[@]}; do
-            if [[ "${{ github.event.pull_request.user.login }}" == "$user" ]]; then
-                echo "$user is a known user, proceeding to build."
-                exit 0
-            fi
-          done
-          echo "User ${{ github.event.pull_request.user.login }} is unknown, PR image build canceled."
-          exit 1
       - name: checkout
         uses: actions/checkout@v2
         with:
